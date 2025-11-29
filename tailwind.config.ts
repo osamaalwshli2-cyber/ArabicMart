@@ -83,9 +83,10 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["var(--font-sans)"],
+        sans: ["Cairo", "var(--font-sans)"],
         serif: ["var(--font-serif)"],
         mono: ["var(--font-mono)"],
+        arabic: ["Cairo", "sans-serif"],
       },
       keyframes: {
         "accordion-down": {
