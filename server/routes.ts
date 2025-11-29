@@ -118,7 +118,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // Create product (admin only)
-  app.post("/api/products", isAuthenticated, async (req, res) => {
+  app.post("/api/products", isAdminAuthenticated, async (req, res) => {
     try {
       const validatedData = insertProductSchema.parse(req.body);
       const product = await storage.createProduct(validatedData);
@@ -133,7 +133,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // Update product (admin only)
-  app.patch("/api/products/:id", isAuthenticated, async (req, res) => {
+  app.patch("/api/products/:id", isAdminAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const validatedData = insertProductSchema.partial().parse(req.body);
@@ -152,7 +152,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // Delete product (admin only)
-  app.delete("/api/products/:id", isAuthenticated, async (req, res) => {
+  app.delete("/api/products/:id", isAdminAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteProduct(id);
@@ -166,7 +166,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   // ==================== CUSTOMER ROUTES ====================
 
   // Get all customers (admin only)
-  app.get("/api/customers", isAuthenticated, async (req, res) => {
+  app.get("/api/customers", isAdminAuthenticated, async (req, res) => {
     try {
       const customers = await storage.getCustomers();
       res.json(customers);
@@ -179,7 +179,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   // ==================== ORDER ROUTES ====================
 
   // Get all orders (admin only)
-  app.get("/api/orders", isAuthenticated, async (req, res) => {
+  app.get("/api/orders", isAdminAuthenticated, async (req, res) => {
     try {
       const orders = await storage.getOrders();
       res.json(orders);
@@ -190,7 +190,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // Get single order by ID (admin only)
-  app.get("/api/orders/:id", isAuthenticated, async (req, res) => {
+  app.get("/api/orders/:id", isAdminAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const order = await storage.getOrder(id);
@@ -270,7 +270,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // Update order status (admin only)
-  app.patch("/api/orders/:id/status", isAuthenticated, async (req, res) => {
+  app.patch("/api/orders/:id/status", isAdminAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const { status } = req.body;

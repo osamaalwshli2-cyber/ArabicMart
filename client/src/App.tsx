@@ -4,14 +4,14 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { CartProvider } from "@/context/CartContext";
-import { useAuth } from "@/hooks/useAuth";
+import { useAdminAuth } from "@/hooks/useAdminAuth";
 import NotFound from "@/pages/not-found";
 import Home from "@/pages/Home";
 import ProductDetails from "@/pages/ProductDetails";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import OrderConfirmation from "@/pages/OrderConfirmation";
-import AdminLanding from "@/pages/admin/Landing";
+import AdminLogin from "@/pages/admin/Login";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import AdminProducts from "@/pages/admin/Products";
 import AdminCategories from "@/pages/admin/Categories";
@@ -20,7 +20,7 @@ import AdminOrderDetails from "@/pages/admin/OrderDetails";
 import AdminCustomers from "@/pages/admin/Customers";
 
 function AdminRouter() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAdminAuth();
 
   if (isLoading) {
     return (
@@ -31,7 +31,7 @@ function AdminRouter() {
   }
 
   if (!isAuthenticated) {
-    return <AdminLanding />;
+    return <AdminLogin />;
   }
 
   return (
