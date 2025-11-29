@@ -9,7 +9,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
   const imageUrl = category.imageUrl || "https://placehold.co/600x300/e2e8f0/64748b?text=صورة+الفئة";
 
   return (
-    <a href={`/?category=${category.id}`} data-testid={`link-category-${category.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+    <a href={`/category/${category.id}`} data-testid={`link-category-${category.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
       <Card className="group overflow-visible hover-elevate cursor-pointer">
         <div className="relative h-32 overflow-hidden rounded-md">
           <img

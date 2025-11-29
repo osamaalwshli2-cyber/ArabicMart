@@ -20,7 +20,7 @@ export function HeroSection() {
             اكتشف مجموعتنا الواسعة من المنتجات عالية الجودة. شحن سريع وخدمة عملاء متميزة.
           </p>
           <div className="flex flex-wrap gap-4">
-            <a href="/?category=all">
+            <a href="/">
               <Button 
                 size="lg" 
                 className="gap-2" 
@@ -30,7 +30,7 @@ export function HeroSection() {
                 <ArrowLeft className="h-5 w-5" />
               </Button>
             </a>
-            <a href="/?featured=true">
+            <a href="/featured">
               <Button 
                 size="lg" 
                 variant="outline" 

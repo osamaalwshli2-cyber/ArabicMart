@@ -115,10 +115,6 @@ export default function Home() {
           <section className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold" data-testid="text-categories-title">الفئات</h2>
-              <Link href="/?category=all" className="text-primary flex items-center gap-1 text-sm font-medium">
-                عرض الكل
-                <ChevronLeft className="h-4 w-4" />
-              </Link>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
               {categoriesLoading
@@ -136,10 +132,10 @@ export default function Home() {
           <section className="mb-12">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold" data-testid="text-featured-title">المنتجات المميزة</h2>
-              <Link href="/?featured=true" className="text-primary flex items-center gap-1 text-sm font-medium">
+              <a href="/featured" className="text-primary flex items-center gap-1 text-sm font-medium">
                 عرض الكل
                 <ChevronLeft className="h-4 w-4" />
-              </Link>
+              </a>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {featuredProducts.map((product) => (
