@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ import { Lock, LogIn, Loader2 } from "lucide-react";
 export default function AdminLogin() {
   const [, setLocation] = useLocation();
   const { toast } = useToast();
+  const queryClient = useQueryClient();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
@@ -24,11 +25,19 @@ export default function AdminLogin() {
       return await res.json();
     },
     onSuccess: () => {
+      // Invalidate and refetch auth status
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/auth-status"] });
+      queryClient.refetchQueries({ queryKey: ["/api/admin/auth-status"] });
+      
       toast({
         title: "تم التسجيل بنجاح",
         description: "مرحبا بك في لوحة التحكم",
       });
-      setLocation("/admin");
+      
+      // Redirect after a small delay to ensure auth status is updated
+      setTimeout(() => {
+        setLocation("/admin");
+      }, 300);
     },
     onError: () => {
       toast({
