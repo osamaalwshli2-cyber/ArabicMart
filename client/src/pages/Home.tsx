@@ -28,8 +28,11 @@ function ProductSkeleton() {
 }
 
 export default function Home() {
-  const [location] = useLocation();
-  const searchParams = new URLSearchParams(location.split("?")[1] || "");
+  const [location, setLocation] = useLocation();
+  
+  // Parse query parameters from current location
+  const urlParts = location.split("?");
+  const searchParams = new URLSearchParams(urlParts[1] || "");
   const searchQuery = searchParams.get("search") || "";
   const categoryFilter = searchParams.get("category") || "";
   const featuredFilter = searchParams.get("featured") === "true";

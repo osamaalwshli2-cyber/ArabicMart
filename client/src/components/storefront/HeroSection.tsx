@@ -1,8 +1,18 @@
-import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { useLocation } from "wouter";
 
 export function HeroSection() {
+  const [, setLocation] = useLocation();
+
+  const handleShopNow = () => {
+    setLocation("/?category=all");
+  };
+
+  const handleFeatured = () => {
+    setLocation("/?featured=true");
+  };
+
   return (
     <section className="relative h-[500px] md:h-[600px] overflow-hidden">
       <div 
@@ -21,17 +31,24 @@ export function HeroSection() {
             اكتشف مجموعتنا الواسعة من المنتجات عالية الجودة. شحن سريع وخدمة عملاء متميزة.
           </p>
           <div className="flex flex-wrap gap-4">
-            <Link href="/?category=all">
-              <Button size="lg" className="gap-2" data-testid="button-shop-now">
-                تسوق الآن
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/?featured=true">
-              <Button size="lg" variant="outline" className="bg-white/10 backdrop-blur border-white/30 text-white hover:bg-white/20" data-testid="button-featured">
-                المنتجات المميزة
-              </Button>
-            </Link>
+            <Button 
+              size="lg" 
+              className="gap-2" 
+              data-testid="button-shop-now"
+              onClick={handleShopNow}
+            >
+              تسوق الآن
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <Button 
+              size="lg" 
+              variant="outline" 
+              className="bg-white/10 backdrop-blur border-white/30 text-white hover:bg-white/20" 
+              data-testid="button-featured"
+              onClick={handleFeatured}
+            >
+              المنتجات المميزة
+            </Button>
           </div>
         </div>
       </div>
