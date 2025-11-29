@@ -62,13 +62,12 @@ export function setupAdminAuth(app: express.Express) {
 
   // Admin logout
   app.post("/api/admin/logout", (req, res) => {
-    req.logout((err) => {
+    (req as any).session.adminId = null;
+    (req as any).session.save((err) => {
       if (err) {
         return res.status(500).json({ message: "فشل تسجيل الخروج" });
       }
-      (req as any).session.destroy(() => {
-        res.json({ success: true });
-      });
+      res.json({ success: true });
     });
   });
 

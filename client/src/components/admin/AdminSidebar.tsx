@@ -9,6 +9,7 @@ import {
   Settings,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAdminLogout } from "@/hooks/useAdminLogout";
 import { cn } from "@/lib/utils";
 
 const menuItems = [
@@ -21,12 +22,17 @@ const menuItems = [
 
 export function AdminSidebar() {
   const [location] = useLocation();
+  const logoutMutation = useAdminLogout();
 
   const isActive = (href: string) => {
     if (href === "/admin") {
       return location === "/admin";
     }
     return location.startsWith(href);
+  };
+
+  const handleLogout = () => {
+    logoutMutation.mutate();
   };
 
   return (
@@ -71,12 +77,16 @@ export function AdminSidebar() {
             عرض المتجر
           </Button>
         </Link>
-        <a href="/api/logout" data-testid="button-admin-logout">
-          <Button variant="ghost" className="w-full justify-start gap-3 h-11 text-destructive hover:text-destructive">
-            <LogOut className="h-5 w-5" />
-            تسجيل الخروج
-          </Button>
-        </a>
+        <Button
+          variant="ghost"
+          className="w-full justify-start gap-3 h-11 text-destructive hover:text-destructive"
+          onClick={handleLogout}
+          disabled={logoutMutation.isPending}
+          data-testid="button-admin-logout"
+        >
+          <LogOut className="h-5 w-5" />
+          تسجيل الخروج
+        </Button>
       </div>
     </aside>
   );
