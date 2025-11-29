@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { type Server } from "http";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAdminAuth, isAdminAuthenticated } from "./adminAuth";
 import { insertCategorySchema, insertProductSchema, insertOrderSchema, insertOrderItemSchema } from "@shared/schema";
 import { z } from "zod";
 
@@ -12,20 +12,8 @@ function generateOrderNumber(): string {
 }
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
-  // Auth middleware
-  await setupAuth(app);
-
-  // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
-    try {
-      const userId = req.user.claims.sub;
-      const user = await storage.getUser(userId);
-      res.json(user);
-    } catch (error) {
-      console.error("Error fetching user:", error);
-      res.status(500).json({ message: "Failed to fetch user" });
-    }
-  });
+  // Admin auth setup
+  setupAdminAuth(app);
 
   // ==================== CATEGORY ROUTES ====================
   
@@ -56,7 +44,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // Create category (admin only)
-  app.post("/api/categories", isAuthenticated, async (req, res) => {
+  app.post("/api/categories", isAdminAuthenticated, async (req, res) => {
     try {
       const validatedData = insertCategorySchema.parse(req.body);
       const category = await storage.createCategory(validatedData);
@@ -71,7 +59,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // Update category (admin only)
-  app.patch("/api/categories/:id", isAuthenticated, async (req, res) => {
+  app.patch("/api/categories/:id", isAdminAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const validatedData = insertCategorySchema.partial().parse(req.body);
@@ -90,7 +78,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   });
 
   // Delete category (admin only)
-  app.delete("/api/categories/:id", isAuthenticated, async (req, res) => {
+  app.delete("/api/categories/:id", isAdminAuthenticated, async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       await storage.deleteCategory(id);
