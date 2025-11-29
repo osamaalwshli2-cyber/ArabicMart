@@ -108,6 +108,62 @@ export const orderItems = pgTable("order_items", {
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
 });
 
+// Coupons table
+export const coupons = pgTable("coupons", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  code: varchar("code", { length: 50 }).notNull().unique(),
+  description: text("description"),
+  discountType: varchar("discount_type", { length: 20 }).notNull(), // 'percentage' or 'fixed'
+  discountValue: decimal("discount_value", { precision: 10, scale: 2 }).notNull(),
+  minOrderAmount: decimal("min_order_amount", { precision: 10, scale: 2 }),
+  maxUsage: integer("max_usage"),
+  currentUsage: integer("current_usage").default(0),
+  expiresAt: timestamp("expires_at"),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Reviews table
+export const reviews = pgTable("reviews", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  productId: integer("product_id").references(() => products.id).notNull(),
+  customerId: integer("customer_id").references(() => customers.id).notNull(),
+  rating: integer("rating").notNull(), // 1-5
+  titleAr: varchar("title_ar", { length: 255 }).notNull(),
+  contentAr: text("content_ar").notNull(),
+  isApproved: boolean("is_approved").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Wishlist table
+export const wishlists = pgTable("wishlists", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  customerId: integer("customer_id").references(() => customers.id).notNull(),
+  productId: integer("product_id").references(() => products.id).notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// Inventory alerts table
+export const inventoryAlerts = pgTable("inventory_alerts", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  productId: integer("product_id").references(() => products.id).notNull(),
+  lowStockThreshold: integer("low_stock_threshold").notNull(),
+  isActive: boolean("is_active").default(true),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+// Order status tracking table
+export const orderTracking = pgTable("order_tracking", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  orderId: integer("order_id").references(() => orders.id).notNull(),
+  status: varchar("status", { length: 50 }).notNull(),
+  comment: text("comment"),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
 // Relations
 export const categoriesRelations = relations(categories, ({ one, many }) => ({
   parent: one(categories, {
