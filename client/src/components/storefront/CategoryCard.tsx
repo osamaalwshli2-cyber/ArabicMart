@@ -1,4 +1,3 @@
-import { useLocation } from "wouter";
 import { Card } from "@/components/ui/card";
 import type { Category } from "@shared/schema";
 
@@ -7,15 +6,10 @@ interface CategoryCardProps {
 }
 
 export function CategoryCard({ category }: CategoryCardProps) {
-  const [, setLocation] = useLocation();
   const imageUrl = category.imageUrl || "https://placehold.co/600x300/e2e8f0/64748b?text=صورة+الفئة";
 
-  const handleCategoryClick = () => {
-    setLocation(`/?category=${category.id}`);
-  };
-
   return (
-    <div data-testid={`link-category-${category.id}`} onClick={handleCategoryClick}>
+    <a href={`/?category=${category.id}`} data-testid={`link-category-${category.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
       <Card className="group overflow-visible hover-elevate cursor-pointer">
         <div className="relative h-32 overflow-hidden rounded-md">
           <img
@@ -31,6 +25,6 @@ export function CategoryCard({ category }: CategoryCardProps) {
           </div>
         </div>
       </Card>
-    </div>
+    </a>
   );
 }

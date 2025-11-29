@@ -1,4 +1,3 @@
-import { useLocation } from "wouter";
 import { ShoppingCart, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +11,6 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem } = useCart();
-  const [, setLocation] = useLocation();
 
   const hasDiscount = product.originalPrice && parseFloat(product.originalPrice) > parseFloat(product.price);
   const discountPercent = hasDiscount
@@ -27,12 +25,8 @@ export function ProductCard({ product }: ProductCardProps) {
     addItem(product);
   };
 
-  const handleCardClick = () => {
-    setLocation(`/product/${product.id}`);
-  };
-
   return (
-    <div data-testid={`link-product-${product.id}`} onClick={handleCardClick}>
+    <a href={`/product/${product.id}`} data-testid={`link-product-${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
       <Card className="group overflow-visible h-full hover-elevate cursor-pointer">
         <div className="relative aspect-square overflow-hidden rounded-t-md">
           <img
@@ -92,6 +86,6 @@ export function ProductCard({ product }: ProductCardProps) {
           )}
         </CardContent>
       </Card>
-    </div>
+    </a>
   );
 }
