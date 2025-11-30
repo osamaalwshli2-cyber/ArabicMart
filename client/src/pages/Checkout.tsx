@@ -10,12 +10,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
+import { CheckoutAuthModal } from "@/components/storefront/CheckoutAuthModal";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
 import { Check, CreditCard, Banknote, Loader2 } from "lucide-react";
 
 interface CheckoutForm {
+  customerId?: number;
   name: string;
   email: string;
   phone: string;
@@ -30,6 +32,7 @@ export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
   const { toast } = useToast();
 
+  const [showAuthModal, setShowAuthModal] = useState(true);
   const [form, setForm] = useState<CheckoutForm>({
     name: "",
     email: "",
@@ -107,6 +110,16 @@ export default function Checkout() {
     createOrderMutation.mutate();
   };
 
+  const handleAuthSuccess = (customerId: number, customerName: string, customerEmail: string) => {
+    setForm((prev) => ({
+      ...prev,
+      customerId,
+      name: customerName,
+      email: customerEmail,
+    }));
+    setShowAuthModal(false);
+  };
+
   if (items.length === 0) {
     setLocation("/cart");
     return null;
@@ -115,6 +128,7 @@ export default function Checkout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      <CheckoutAuthModal open={showAuthModal} onSuccess={handleAuthSuccess} />
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">

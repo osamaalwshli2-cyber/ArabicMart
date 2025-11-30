@@ -2,13 +2,22 @@ import type { Express } from "express";
 import { type Server } from "http";
 import { storage } from "./storage";
 import { setupAdminAuth, isAdminAuthenticated } from "./adminAuth";
-import { insertCategorySchema, insertProductSchema, insertOrderSchema, insertOrderItemSchema } from "@shared/schema";
+import { insertCategorySchema, insertProductSchema, insertOrderSchema, insertOrderItemSchema, customerLoginSchema, customerRegisterSchema } from "@shared/schema";
 import { z } from "zod";
+import crypto from "crypto";
 
 function generateOrderNumber(): string {
   const timestamp = Date.now().toString(36).toUpperCase();
   const random = Math.random().toString(36).substring(2, 6).toUpperCase();
   return `ORD-${timestamp}-${random}`;
+}
+
+function hashPassword(password: string): string {
+  return crypto.createHash("sha256").update(password + "salt").digest("hex");
+}
+
+function generateToken(): string {
+  return crypto.randomBytes(32).toString("hex");
 }
 
 export async function registerRoutes(httpServer: Server, app: Express): Promise<Server> {
@@ -173,6 +182,66 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     } catch (error) {
       console.error("Error fetching customers:", error);
       res.status(500).json({ message: "Failed to fetch customers" });
+    }
+  });
+
+  // Customer login
+  app.post("/api/customers/login", async (req, res) => {
+    try {
+      const { email, password } = customerLoginSchema.parse(req.body);
+      const customer = await storage.getCustomerByEmail(email);
+
+      if (!customer || !customer.password || customer.password !== hashPassword(password)) {
+        return res.status(401).json({ message: "البريد الإلكتروني أو كلمة المرور غير صحيحة" });
+      }
+
+      const token = generateToken();
+      res.json({
+        token,
+        customerId: customer.id,
+        customerName: customer.name,
+        customerEmail: customer.email,
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      console.error("Error logging in customer:", error);
+      res.status(500).json({ message: "Failed to login" });
+    }
+  });
+
+  // Customer register
+  app.post("/api/customers/register", async (req, res) => {
+    try {
+      const { name, email, password } = customerRegisterSchema.parse(req.body);
+
+      // Check if customer already exists
+      const existingCustomer = await storage.getCustomerByEmail(email);
+      if (existingCustomer) {
+        return res.status(409).json({ message: "هذا البريد الإلكتروني مسجل بالفعل" });
+      }
+
+      // Create new customer
+      const customer = await storage.createCustomer({
+        name,
+        email,
+        password: hashPassword(password),
+      });
+
+      const token = generateToken();
+      res.status(201).json({
+        token,
+        customerId: customer.id,
+        customerName: customer.name,
+        customerEmail: customer.email,
+      });
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ message: "Invalid data", errors: error.errors });
+      }
+      console.error("Error registering customer:", error);
+      res.status(500).json({ message: "Failed to register" });
     }
   });
 
