@@ -14,7 +14,7 @@ export function HeroSection() {
       <div className="container mx-auto px-4 h-full flex items-center relative z-10">
         <div className="max-w-xl text-white">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight" data-testid="text-hero-title">
-            تسوق أفضل المنتجات بأسعار لا تُقاوم
+            منتجات متنوعة، جودة عالية، أفضل أسعار
           </h1>
           <p className="text-lg md:text-xl text-white/90 mb-8 leading-relaxed" data-testid="text-hero-description">
             اكتشف مجموعتنا الواسعة من المنتجات عالية الجودة. شحن سريع وخدمة عملاء متميزة.
