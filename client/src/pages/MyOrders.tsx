@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { useQuery } from "@tanstack/react-query";
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -40,6 +39,8 @@ const statusConfig: Record<string, { label: string; color: string; icon: any }> 
 export default function MyOrders() {
   const [, setLocation] = useLocation();
   const [customerEmail, setCustomerEmail] = useState<string | null>(null);
+  const [orders, setOrders] = useState<Order[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Get customer email from localStorage
@@ -51,15 +52,28 @@ export default function MyOrders() {
     setCustomerEmail(email);
   }, [setLocation]);
 
-  const { data: orders, isLoading } = useQuery<Order[]>({
-    queryKey: ["/api/orders/by-email", customerEmail],
-    enabled: !!customerEmail,
-    queryFn: async () => {
-      if (!customerEmail) return [];
-      const response = await fetch(`/api/orders/by-email?email=${encodeURIComponent(customerEmail)}`);
-      return response.json();
-    },
-  });
+  useEffect(() => {
+    if (!customerEmail) return;
+
+    const fetchOrders = async () => {
+      try {
+        setIsLoading(true);
+        const response = await fetch(`/api/orders/by-email?email=${encodeURIComponent(customerEmail)}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch orders");
+        }
+        const data = await response.json();
+        setOrders(data);
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+        setOrders([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchOrders();
+  }, [customerEmail]);
 
   if (!customerEmail) {
     return null;
