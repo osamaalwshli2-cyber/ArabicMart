@@ -73,18 +73,17 @@ export function CustomerAuthModal({
     }
   };
 
+  const title = isLogin ? "تسجيل الدخول" : "إنشاء حساب";
+  const description = isLogin
+    ? "يرجى تسجيل الدخول لربط طلبك بحسابك"
+    : "أنشئ حساباً لتتمكن من تتبع طلباتك";
+
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby="order-auth-description">
         <DialogHeader>
-          <DialogTitle data-testid="text-auth-title">
-            {isLogin ? "تسجيل الدخول" : "إنشاء حساب"}
-          </DialogTitle>
-          <DialogDescription>
-            {isLogin
-              ? "يرجى تسجيل الدخول لربط طلبك بحسابك"
-              : "أنشئ حساباً لتتمكن من تتبع طلباتك"}
-          </DialogDescription>
+          <DialogTitle data-testid="text-auth-title">{title}</DialogTitle>
+          <DialogDescription id="order-auth-description">{description}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">

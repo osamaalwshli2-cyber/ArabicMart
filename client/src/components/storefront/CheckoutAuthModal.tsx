@@ -66,18 +66,17 @@ export function CheckoutAuthModal({ open, onSuccess }: CheckoutAuthModalProps) {
     }
   };
 
+  const title = isLogin ? "تسجيل الدخول" : "إنشاء حساب جديد";
+  const description = isLogin
+    ? "تسجيل الدخول لتتبع طلباتك بسهولة"
+    : "أنشئ حساباً لتتبع جميع طلباتك";
+
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby="auth-description">
         <DialogHeader>
-          <DialogTitle data-testid="text-auth-title">
-            {isLogin ? "تسجيل الدخول" : "إنشاء حساب جديد"}
-          </DialogTitle>
-          <DialogDescription>
-            {isLogin
-              ? "تسجيل الدخول لتتبع طلباتك بسهولة"
-              : "أنشئ حساباً لتتبع جميع طلباتك"}
-          </DialogDescription>
+          <DialogTitle data-testid="text-auth-title">{title}</DialogTitle>
+          <DialogDescription id="auth-description">{description}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
