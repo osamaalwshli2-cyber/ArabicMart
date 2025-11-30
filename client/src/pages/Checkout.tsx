@@ -51,6 +51,7 @@ export default function Checkout() {
   const createOrderMutation = useMutation({
     mutationFn: async () => {
       const orderData = {
+        customerId: form.customerId || null,
         customerName: form.name,
         customerEmail: form.email,
         customerPhone: form.phone,

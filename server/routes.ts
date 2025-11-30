@@ -305,10 +305,17 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
   // Create order (public - for checkout)
   app.post("/api/orders", async (req, res) => {
     try {
-      const { items, ...orderData } = req.body;
+      const { items, customerId, ...orderData } = req.body;
 
-      // Check if customer exists, create if not
-      let customer = await storage.getCustomerByEmail(orderData.customerEmail);
+      // Use provided customerId or lookup by email
+      let customer;
+      if (customerId) {
+        customer = await storage.getCustomer(customerId);
+      } else {
+        customer = await storage.getCustomerByEmail(orderData.customerEmail);
+      }
+
+      // If customer still doesn't exist, create one
       if (!customer) {
         customer = await storage.createCustomer({
           name: orderData.customerName,
