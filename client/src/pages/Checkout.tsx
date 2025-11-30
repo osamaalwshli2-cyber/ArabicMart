@@ -32,7 +32,10 @@ export default function Checkout() {
   const { items, subtotal, clearCart } = useCart();
   const { toast } = useToast();
 
-  const [showAuthModal, setShowAuthModal] = useState(true);
+  // Check login status first to determine initial modal state
+  const isAlreadyLoggedIn = !!localStorage.getItem("customerEmail");
+  
+  const [showAuthModal, setShowAuthModal] = useState(!isAlreadyLoggedIn);
   const [form, setForm] = useState<CheckoutForm>({
     name: "",
     email: "",
@@ -44,7 +47,7 @@ export default function Checkout() {
   });
 
   const [step, setStep] = useState(1);
-  const [isLoggedInCustomer, setIsLoggedInCustomer] = useState(false);
+  const [isLoggedInCustomer, setIsLoggedInCustomer] = useState(isAlreadyLoggedIn);
 
   // Check if customer is already logged in and fetch their full profile
   useEffect(() => {
@@ -68,6 +71,7 @@ export default function Checkout() {
             address: customer.address || "",
             city: customer.city || "",
           }));
+          // Never show auth modal for logged-in customers
           setShowAuthModal(false);
         })
         .catch((error) => {
@@ -79,6 +83,7 @@ export default function Checkout() {
             email,
             name: customerName,
           }));
+          // Never show auth modal for logged-in customers
           setShowAuthModal(false);
         });
     }
