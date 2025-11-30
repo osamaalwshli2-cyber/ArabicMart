@@ -10,7 +10,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
-import { CheckoutAuthModal } from "@/components/storefront/CheckoutAuthModal";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -151,19 +150,6 @@ export default function Checkout() {
     createOrderMutation.mutate();
   };
 
-  const handleAuthSuccess = (customerId: number | null, customerName: string, customerEmail: string) => {
-    setForm((prev) => ({
-      ...prev,
-      customerId: customerId || undefined,
-      name: customerName,
-      email: customerEmail,
-    }));
-    setShowAuthModal(false);
-  };
-
-  const handleGuestCheckout = () => {
-    setShowAuthModal(false);
-  };
 
   if (items.length === 0) {
     setLocation("/cart");
@@ -173,13 +159,6 @@ export default function Checkout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      {!isLoggedInCustomer && showAuthModal && (
-        <CheckoutAuthModal 
-          open={true}
-          onSuccess={handleAuthSuccess}
-          onGuestCheckout={handleGuestCheckout}
-        />
-      )}
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
