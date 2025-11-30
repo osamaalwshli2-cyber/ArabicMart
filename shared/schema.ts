@@ -70,6 +70,7 @@ export const customers = pgTable("customers", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
+  password: text("password").notNull(),
   phone: varchar("phone", { length: 50 }),
   address: text("address"),
   city: varchar("city", { length: 100 }),
