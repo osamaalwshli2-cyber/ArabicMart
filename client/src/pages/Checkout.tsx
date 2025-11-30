@@ -262,7 +262,6 @@ export default function Checkout() {
                           onChange={(e) => handleChange("phone", e.target.value)}
                           placeholder="+966 5x xxx xxxx"
                           dir="ltr"
-                          disabled={isLoggedInCustomer}
                           data-testid="input-phone"
                         />
                       </div>
@@ -273,7 +272,6 @@ export default function Checkout() {
                           value={form.city}
                           onChange={(e) => handleChange("city", e.target.value)}
                           placeholder="الرياض"
-                          disabled={isLoggedInCustomer}
                           data-testid="input-city"
                         />
                       </div>
@@ -285,7 +283,6 @@ export default function Checkout() {
                         value={form.address}
                         onChange={(e) => handleChange("address", e.target.value)}
                         placeholder="الحي، الشارع، رقم المبنى"
-                        disabled={isLoggedInCustomer}
                         data-testid="input-address"
                       />
                     </div>
