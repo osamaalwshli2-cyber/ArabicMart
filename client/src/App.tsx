@@ -15,7 +15,8 @@ import MyAccount from "@/pages/MyAccount";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import OrderConfirmation from "@/pages/OrderConfirmation";
-import AdminLogin from "@/pages/admin/Login";
+import AdminLoginPage from "@/pages/admin/Login";
+import AdminLoginStandalone from "@/pages/AdminLogin";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import AdminProducts from "@/pages/admin/Products";
 import AdminCategories from "@/pages/admin/Categories";
@@ -35,7 +36,7 @@ function AdminRouter() {
   }
 
   if (!isAuthenticated) {
-    return <AdminLogin />;
+    return <AdminLoginPage />;
   }
 
   return (
@@ -60,6 +61,7 @@ function Router() {
       <Route path="/category/:id" component={CategoryProducts} />
       <Route path="/my-orders" component={MyOrders} />
       <Route path="/my-account" component={MyAccount} />
+      <Route path="/admin-login" component={AdminLoginStandalone} />
       <Route path="/cart" component={Cart} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/order-confirmation/:orderNumber" component={OrderConfirmation} />

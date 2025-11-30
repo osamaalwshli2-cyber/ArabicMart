@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Header } from "@/components/storefront/Header";
 import { Footer } from "@/components/storefront/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,16 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, Phone, MapPin, User, LogOut, Lock, LogIn, Loader2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { apiRequest } from "@/lib/queryClient";
+import { Mail, Phone, MapPin, User, LogOut, ArrowRight } from "lucide-react";
 import type { Customer } from "@shared/schema";
 
 export default function MyAccount() {
   const [, setLocation] = useLocation();
-  const { toast } = useToast();
-  const queryClient = useQueryClient();
   const [customer, setCustomer] = useState<Partial<Customer> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -28,10 +22,6 @@ export default function MyAccount() {
     address: "",
     city: "",
   });
-
-  // Admin login states
-  const [adminUsername, setAdminUsername] = useState("");
-  const [adminPassword, setAdminPassword] = useState("");
 
   useEffect(() => {
     const email = localStorage.getItem("customerEmail");
@@ -67,36 +57,6 @@ export default function MyAccount() {
     fetchCustomer();
   }, [setLocation]);
 
-  const adminLoginMutation = useMutation({
-    mutationFn: async () => {
-      const res = await apiRequest("POST", "/api/admin/login", {
-        username: adminUsername,
-        password: adminPassword,
-      });
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/admin/auth-status"] });
-      queryClient.refetchQueries({ queryKey: ["/api/admin/auth-status"] });
-
-      toast({
-        title: "تم التسجيل بنجاح",
-        description: "مرحبا بك في لوحة التحكم",
-      });
-
-      setTimeout(() => {
-        setLocation("/admin");
-      }, 300);
-    },
-    onError: () => {
-      toast({
-        title: "خطأ في التسجيل",
-        description: "اسم المستخدم أو كلمة المرور غير صحيحة",
-        variant: "destructive",
-      });
-    },
-  });
-
   const handleLogoutCustomer = () => {
     localStorage.removeItem("customerToken");
     localStorage.removeItem("customerId");
@@ -107,19 +67,6 @@ export default function MyAccount() {
 
   const handleSave = () => {
     setIsEditing(false);
-  };
-
-  const handleAdminLogin = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!adminUsername || !adminPassword) {
-      toast({
-        title: "حقول مطلوبة",
-        description: "يرجى إدخال اسم المستخدم وكلمة المرور",
-        variant: "destructive",
-      });
-      return;
-    }
-    adminLoginMutation.mutate();
   };
 
   if (!customer && !isLoading) {
@@ -133,33 +80,32 @@ export default function MyAccount() {
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <div className="mb-8">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setLocation("/")}
+              className="mb-4"
+              data-testid="button-back"
+            >
+              <ArrowRight className="h-4 w-4 ml-2" />
+              رجوع
+            </Button>
             <h1 className="text-3xl font-bold mb-2" data-testid="text-account-title">
-              الحساب والإدارة
+              معلومات حسابي
             </h1>
-            <p className="text-muted-foreground">إدارة حسابك الشخصي أو دخول لوحة التحكم</p>
+            <p className="text-muted-foreground">عرض وإدارة بيانات حسابك الشخصي</p>
           </div>
 
-          <Tabs defaultValue="account" className="w-full" dir="rtl">
-            <TabsList className="grid w-full grid-cols-2" data-testid="tabs-account-admin">
-              <TabsTrigger value="account" data-testid="tab-account">
-                معلومات حسابي
-              </TabsTrigger>
-              <TabsTrigger value="admin" data-testid="tab-admin">
-                تسجيل دخول Admin
-              </TabsTrigger>
-            </TabsList>
-
-            {/* Customer Account Tab */}
-            <TabsContent value="account" className="space-y-6 mt-6">
-              {isLoading ? (
-                <div className="space-y-4">
-                  <Skeleton className="h-16" />
-                  <Skeleton className="h-16" />
-                  <Skeleton className="h-16" />
-                </div>
-              ) : (
-                <div className="space-y-6">
-                  <Card className="hover-elevate">
+          <div className="space-y-6 mt-6">
+            {isLoading ? (
+              <div className="space-y-4">
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
+                <Skeleton className="h-16" />
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <Card className="hover-elevate">
                     <CardHeader className="flex flex-row items-center justify-between">
                       <CardTitle className="flex items-center gap-2" data-testid="text-account-info">
                         <User className="h-5 w-5" />
@@ -316,78 +262,7 @@ export default function MyAccount() {
                   </div>
                 </div>
               )}
-            </TabsContent>
-
-            {/* Admin Login Tab */}
-            <TabsContent value="admin" className="mt-6">
-              <Card className="hover-elevate">
-                <CardHeader className="text-center space-y-4">
-                  <div className="w-16 h-16 bg-primary rounded-xl flex items-center justify-center mx-auto">
-                    <Lock className="h-8 w-8 text-primary-foreground" />
-                  </div>
-                  <CardTitle className="text-2xl" data-testid="text-admin-login-title">
-                    تسجيل دخول الإدارة
-                  </CardTitle>
-                  <p className="text-muted-foreground text-sm">
-                    أدخل بيانات اعتمادك للوصول إلى لوحة التحكم
-                  </p>
-                </CardHeader>
-
-                <CardContent>
-                  <form onSubmit={handleAdminLogin} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="admin-username" data-testid="label-admin-username">
-                        اسم المستخدم
-                      </Label>
-                      <Input
-                        id="admin-username"
-                        type="text"
-                        value={adminUsername}
-                        onChange={(e) => setAdminUsername(e.target.value)}
-                        placeholder="أدخل اسم المستخدم"
-                        data-testid="input-admin-username"
-                        dir="rtl"
-                      />
-                    </div>
-
-                    <div className="space-y-2">
-                      <Label htmlFor="admin-password" data-testid="label-admin-password">
-                        كلمة المرور
-                      </Label>
-                      <Input
-                        id="admin-password"
-                        type="password"
-                        value={adminPassword}
-                        onChange={(e) => setAdminPassword(e.target.value)}
-                        placeholder="أدخل كلمة المرور"
-                        data-testid="input-admin-password"
-                        dir="rtl"
-                      />
-                    </div>
-
-                    <Button
-                      type="submit"
-                      className="w-full flex items-center gap-2"
-                      disabled={adminLoginMutation.isPending}
-                      data-testid="button-admin-login"
-                    >
-                      {adminLoginMutation.isPending ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          جاري التسجيل...
-                        </>
-                      ) : (
-                        <>
-                          <LogIn className="h-4 w-4" />
-                          تسجيل الدخول
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+            </div>
         </div>
       </main>
 
