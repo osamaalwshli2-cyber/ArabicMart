@@ -1,17 +1,32 @@
 import { Link, useLocation } from "wouter";
-import { ShoppingCart, Search, Menu, X, User, Package } from "lucide-react";
+import { ShoppingCart, Search, Menu, X, User, Package, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useCart } from "@/context/CartContext";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function Header() {
   const [location, setLocation] = useLocation();
   const { itemCount } = useCart();
   const [searchQuery, setSearchQuery] = useState("");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const email = localStorage.getItem("customerEmail");
+    setIsLoggedIn(!!email);
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("customerToken");
+    localStorage.removeItem("customerId");
+    localStorage.removeItem("customerEmail");
+    localStorage.removeItem("customerName");
+    setIsLoggedIn(false);
+    setLocation("/");
+  };
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,11 +107,13 @@ export function Header() {
           </form>
 
           <div className="flex items-center gap-2">
-            <Link href="/my-orders" data-testid="link-orders">
-              <Button variant="ghost" size="icon" title="طلباتي">
-                <Package className="h-5 w-5" />
-              </Button>
-            </Link>
+            {isLoggedIn && (
+              <Link href="/my-orders" data-testid="link-orders">
+                <Button variant="ghost" size="icon" title="طلباتي">
+                  <Package className="h-5 w-5" />
+                </Button>
+              </Link>
+            )}
             <Link href="/cart" data-testid="link-cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />
@@ -110,11 +127,30 @@ export function Header() {
                 )}
               </Button>
             </Link>
-            <Link href="/admin" data-testid="link-admin">
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
-              </Button>
-            </Link>
+            {isLoggedIn ? (
+              <>
+                <Link href="/my-account" data-testid="link-account">
+                  <Button variant="ghost" size="icon" title="حسابي">
+                    <User className="h-5 w-5" />
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleLogout}
+                  title="تسجيل الخروج"
+                  data-testid="button-logout-header"
+                >
+                  <LogOut className="h-5 w-5" />
+                </Button>
+              </>
+            ) : (
+              <Link href="/admin" data-testid="link-admin">
+                <Button variant="ghost" size="icon" title="لوحة التحكم">
+                  <User className="h-5 w-5" />
+                </Button>
+              </Link>
+            )}
           </div>
         </div>
 
