@@ -9,9 +9,9 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xl">م</span>
+                <span className="text-primary-foreground font-bold text-xl">س</span>
               </div>
-              <span className="font-bold text-xl">متجر العربي</span>
+              <span className="font-bold text-xl">سوق الخير</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               متجرك الإلكتروني المفضل للتسوق. نقدم لك أفضل المنتجات بأسعار مميزة وخدمة عملاء متميزة.
@@ -49,7 +49,7 @@ export function Footer() {
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Phone className="h-4 w-4" />
-                <span dir="ltr">+966 50 123 4567</span>
+                <span dir="ltr">+967778224704</span>
               </li>
               <li className="flex items-center gap-2 text-muted-foreground text-sm">
                 <Mail className="h-4 w-4" />
@@ -57,7 +57,7 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-2 text-muted-foreground text-sm">
                 <MapPin className="h-4 w-4" />
-                <span>الرياض، المملكة العربية السعودية</span>
+                <span>ذمار، اليمن</span>
               </li>
             </ul>
           </div>
@@ -92,7 +92,7 @@ export function Footer() {
 
         <div className="border-t mt-8 pt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} متجر العربي. جميع الحقوق محفوظة.
+            © {new Date().getFullYear()} سوق الخير. جميع الحقوق محفوظة.
           </p>
         </div>
       </div>
