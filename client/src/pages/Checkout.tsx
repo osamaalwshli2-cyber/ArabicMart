@@ -44,22 +44,43 @@ export default function Checkout() {
   });
 
   const [step, setStep] = useState(1);
+  const [isLoggedInCustomer, setIsLoggedInCustomer] = useState(false);
 
-  // Check if customer is already logged in
+  // Check if customer is already logged in and fetch their full profile
   useEffect(() => {
     const email = localStorage.getItem("customerEmail");
     const customerId = localStorage.getItem("customerId");
     const customerName = localStorage.getItem("customerName");
     
     if (email && customerId && customerName) {
-      // Customer is already logged in, skip auth modal
-      setForm((prev) => ({
-        ...prev,
-        customerId: parseInt(customerId),
-        email,
-        name: customerName,
-      }));
-      setShowAuthModal(false);
+      // Customer is already logged in, fetch their full profile
+      setIsLoggedInCustomer(true);
+      
+      fetch(`/api/customers/by-email?email=${encodeURIComponent(email)}`)
+        .then((res) => res.json())
+        .then((customer) => {
+          setForm((prev) => ({
+            ...prev,
+            customerId: parseInt(customerId),
+            email: customer.email || email,
+            name: customer.name || customerName,
+            phone: customer.phone || "",
+            address: customer.address || "",
+            city: customer.city || "",
+          }));
+          setShowAuthModal(false);
+        })
+        .catch((error) => {
+          console.error("Error fetching customer profile:", error);
+          // Fallback to just using localStorage data
+          setForm((prev) => ({
+            ...prev,
+            customerId: parseInt(customerId),
+            email,
+            name: customerName,
+          }));
+          setShowAuthModal(false);
+        });
     }
   }, []);
 
@@ -205,6 +226,7 @@ export default function Checkout() {
                           value={form.name}
                           onChange={(e) => handleChange("name", e.target.value)}
                           placeholder="أدخل اسمك الكامل"
+                          disabled={isLoggedInCustomer}
                           data-testid="input-name"
                         />
                       </div>
@@ -217,6 +239,7 @@ export default function Checkout() {
                           onChange={(e) => handleChange("email", e.target.value)}
                           placeholder="example@email.com"
                           dir="ltr"
+                          disabled={isLoggedInCustomer}
                           data-testid="input-email"
                         />
                       </div>
@@ -231,6 +254,7 @@ export default function Checkout() {
                           onChange={(e) => handleChange("phone", e.target.value)}
                           placeholder="+966 5x xxx xxxx"
                           dir="ltr"
+                          disabled={isLoggedInCustomer}
                           data-testid="input-phone"
                         />
                       </div>
@@ -241,6 +265,7 @@ export default function Checkout() {
                           value={form.city}
                           onChange={(e) => handleChange("city", e.target.value)}
                           placeholder="الرياض"
+                          disabled={isLoggedInCustomer}
                           data-testid="input-city"
                         />
                       </div>
@@ -252,6 +277,7 @@ export default function Checkout() {
                         value={form.address}
                         onChange={(e) => handleChange("address", e.target.value)}
                         placeholder="الحي، الشارع، رقم المبنى"
+                        disabled={isLoggedInCustomer}
                         data-testid="input-address"
                       />
                     </div>
