@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useRoute, Link } from "wouter";
 import { Header } from "@/components/storefront/Header";
@@ -8,14 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OrderStatusBadge } from "@/components/admin/OrderStatusBadge";
-import { CustomerAuthModal } from "@/components/storefront/CustomerAuthModal";
 import { CheckCircle, Package, Truck, Home, ArrowLeft } from "lucide-react";
 import type { OrderWithItems } from "@shared/schema";
 
 export default function OrderConfirmation() {
   const [, params] = useRoute("/order-confirmation/:orderNumber");
   const orderNumber = params?.orderNumber;
-  const [showAuthModal, setShowAuthModal] = useState(true);
 
   const { data: order, isLoading } = useQuery<OrderWithItems>({
     queryKey: ["/api/orders/number", orderNumber],
@@ -69,13 +66,6 @@ export default function OrderConfirmation() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      {order && (
-        <CustomerAuthModal
-          open={showAuthModal}
-          orderEmail={order.customerEmail}
-          onSuccess={() => setShowAuthModal(false)}
-        />
-      )}
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
