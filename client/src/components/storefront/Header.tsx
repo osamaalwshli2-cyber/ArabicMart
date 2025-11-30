@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { ShoppingCart, Search, Menu, X, User } from "lucide-react";
+import { ShoppingCart, Search, Menu, X, User, Package } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -92,6 +92,11 @@ export function Header() {
           </form>
 
           <div className="flex items-center gap-2">
+            <Link href="/my-orders" data-testid="link-orders">
+              <Button variant="ghost" size="icon" title="طلباتي">
+                <Package className="h-5 w-5" />
+              </Button>
+            </Link>
             <Link href="/cart" data-testid="link-cart">
               <Button variant="ghost" size="icon" className="relative">
                 <ShoppingCart className="h-5 w-5" />

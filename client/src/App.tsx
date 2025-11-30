@@ -10,6 +10,7 @@ import Home from "@/pages/Home";
 import ProductDetails from "@/pages/ProductDetails";
 import FeaturedProducts from "@/pages/FeaturedProducts";
 import CategoryProducts from "@/pages/CategoryProducts";
+import MyOrders from "@/pages/MyOrders";
 import Cart from "@/pages/Cart";
 import Checkout from "@/pages/Checkout";
 import OrderConfirmation from "@/pages/OrderConfirmation";
@@ -56,6 +57,7 @@ function Router() {
       <Route path="/product/:id" component={ProductDetails} />
       <Route path="/featured" component={FeaturedProducts} />
       <Route path="/category/:id" component={CategoryProducts} />
+      <Route path="/my-orders" component={MyOrders} />
       <Route path="/cart" component={Cart} />
       <Route path="/checkout" component={Checkout} />
       <Route path="/order-confirmation/:orderNumber" component={OrderConfirmation} />

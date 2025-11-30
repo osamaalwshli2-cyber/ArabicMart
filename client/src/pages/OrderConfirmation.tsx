@@ -17,6 +17,12 @@ export default function OrderConfirmation() {
   const { data: order, isLoading } = useQuery<OrderWithItems>({
     queryKey: ["/api/orders/number", orderNumber],
     enabled: !!orderNumber,
+    onSuccess: (data) => {
+      // Save customer email to localStorage for My Orders feature
+      if (data?.customerEmail) {
+        localStorage.setItem("customerEmail", data.customerEmail);
+      }
+    },
   });
 
   if (isLoading) {

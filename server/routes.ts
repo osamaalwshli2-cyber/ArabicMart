@@ -218,6 +218,21 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
+  // Get orders by customer email (for customers)
+  app.get("/api/orders/by-email", async (req, res) => {
+    try {
+      const email = req.query.email as string;
+      if (!email) {
+        return res.status(400).json({ message: "Email is required" });
+      }
+      const orders = await storage.getOrdersByEmail(email);
+      res.json(orders);
+    } catch (error) {
+      console.error("Error fetching orders by email:", error);
+      res.status(500).json({ message: "Failed to fetch orders" });
+    }
+  });
+
   // Create order (public - for checkout)
   app.post("/api/orders", async (req, res) => {
     try {
