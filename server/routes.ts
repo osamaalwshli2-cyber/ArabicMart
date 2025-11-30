@@ -276,22 +276,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
-  // Get single order by ID (admin only)
-  app.get("/api/orders/:id", isAdminAuthenticated, async (req, res) => {
-    try {
-      const id = parseInt(req.params.id);
-      const order = await storage.getOrder(id);
-      if (!order) {
-        return res.status(404).json({ message: "Order not found" });
-      }
-      res.json(order);
-    } catch (error) {
-      console.error("Error fetching order:", error);
-      res.status(500).json({ message: "Failed to fetch order" });
-    }
-  });
-
-  // Get order by order number (for customers)
+  // Get order by order number (for customers) - MUST be before :id route
   app.get("/api/orders/number/:orderNumber", async (req, res) => {
     try {
       const order = await storage.getOrderByNumber(req.params.orderNumber);
@@ -305,7 +290,7 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     }
   });
 
-  // Get orders by customer email (for customers)
+  // Get orders by customer email (for customers) - MUST be before :id route
   app.get("/api/orders/by-email", async (req, res) => {
     try {
       const email = req.query.email as string;
@@ -317,6 +302,24 @@ export async function registerRoutes(httpServer: Server, app: Express): Promise<
     } catch (error) {
       console.error("Error fetching orders by email:", error);
       res.status(500).json({ message: "Failed to fetch orders" });
+    }
+  });
+
+  // Get single order by ID (admin only)
+  app.get("/api/orders/:id", isAdminAuthenticated, async (req, res) => {
+    try {
+      const id = parseInt(req.params.id);
+      if (isNaN(id)) {
+        return res.status(400).json({ message: "Invalid order ID" });
+      }
+      const order = await storage.getOrder(id);
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+      res.json(order);
+    } catch (error) {
+      console.error("Error fetching order:", error);
+      res.status(500).json({ message: "Failed to fetch order" });
     }
   });
 
