@@ -56,8 +56,9 @@ export default function Checkout() {
     const customerName = localStorage.getItem("customerName");
     
     if (email && customerId && customerName) {
-      // Customer is already logged in, fetch their full profile
+      // Customer is already logged in
       setIsLoggedInCustomer(true);
+      setShowAuthModal(false); // Immediately hide modal for logged-in customers
       
       fetch(`/api/customers/by-email?email=${encodeURIComponent(email)}`)
         .then((res) => res.json())
@@ -71,20 +72,15 @@ export default function Checkout() {
             address: customer.address || "",
             city: customer.city || "",
           }));
-          // Never show auth modal for logged-in customers
-          setShowAuthModal(false);
         })
         .catch((error) => {
           console.error("Error fetching customer profile:", error);
-          // Fallback to just using localStorage data
           setForm((prev) => ({
             ...prev,
             customerId: parseInt(customerId),
             email,
             name: customerName,
           }));
-          // Never show auth modal for logged-in customers
-          setShowAuthModal(false);
         });
     }
   }, []);
@@ -177,9 +173,9 @@ export default function Checkout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      {!isLoggedInCustomer && (
+      {!isLoggedInCustomer && showAuthModal && (
         <CheckoutAuthModal 
-          open={showAuthModal} 
+          open={true}
           onSuccess={handleAuthSuccess}
           onGuestCheckout={handleGuestCheckout}
         />
