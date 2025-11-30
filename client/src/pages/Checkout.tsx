@@ -260,7 +260,7 @@ export default function Checkout() {
                           type="tel"
                           value={form.phone}
                           onChange={(e) => handleChange("phone", e.target.value)}
-                          placeholder="+966 5x xxx xxxx"
+                          placeholder="+9677xxxx xxxx"
                           dir="ltr"
                           data-testid="input-phone"
                         />
@@ -271,7 +271,7 @@ export default function Checkout() {
                           id="city"
                           value={form.city}
                           onChange={(e) => handleChange("city", e.target.value)}
-                          placeholder="الرياض"
+                          placeholder="ذمار"
                           data-testid="input-city"
                         />
                       </div>
