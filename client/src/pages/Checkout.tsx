@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useMutation } from "@tanstack/react-query";
 import { Header } from "@/components/storefront/Header";
@@ -44,6 +44,24 @@ export default function Checkout() {
   });
 
   const [step, setStep] = useState(1);
+
+  // Check if customer is already logged in
+  useEffect(() => {
+    const email = localStorage.getItem("customerEmail");
+    const customerId = localStorage.getItem("customerId");
+    const customerName = localStorage.getItem("customerName");
+    
+    if (email && customerId && customerName) {
+      // Customer is already logged in, skip auth modal
+      setForm((prev) => ({
+        ...prev,
+        customerId: parseInt(customerId),
+        email,
+        name: customerName,
+      }));
+      setShowAuthModal(false);
+    }
+  }, []);
 
   const shippingCost = subtotal > 200 ? 0 : 25;
   const total = subtotal + shippingCost;

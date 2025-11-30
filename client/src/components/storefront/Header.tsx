@@ -4,8 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useCart } from "@/context/CartContext";
 import { useState, useEffect } from "react";
+import AccountMenu from "./AccountMenu";
 
 export function Header() {
   const [location, setLocation] = useLocation();
@@ -127,30 +134,7 @@ export function Header() {
                 )}
               </Button>
             </Link>
-            {isLoggedIn ? (
-              <>
-                <Link href="/my-account" data-testid="link-account">
-                  <Button variant="ghost" size="icon" title="حسابي">
-                    <User className="h-5 w-5" />
-                  </Button>
-                </Link>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={handleLogout}
-                  title="تسجيل الخروج"
-                  data-testid="button-logout-header"
-                >
-                  <LogOut className="h-5 w-5" />
-                </Button>
-              </>
-            ) : (
-              <Link href="/admin" data-testid="link-admin">
-                <Button variant="ghost" size="icon" title="لوحة التحكم">
-                  <User className="h-5 w-5" />
-                </Button>
-              </Link>
-            )}
+            <AccountMenu isLoggedIn={isLoggedIn} onLogout={handleLogout} />
           </div>
         </div>
 
