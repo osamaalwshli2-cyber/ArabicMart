@@ -245,6 +245,10 @@ export const customerRegisterSchema = z.object({
   name: z.string().min(2),
   email: z.string().email(),
   password: z.string().min(6),
+  passwordConfirm: z.string().min(6),
+}).refine((data) => data.password === data.passwordConfirm, {
+  message: "كلمات المرور غير متطابقة",
+  path: ["passwordConfirm"],
 });
 
 export type CustomerLogin = z.infer<typeof customerLoginSchema>;

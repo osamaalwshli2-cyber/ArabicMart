@@ -22,6 +22,7 @@ export function CheckoutAuthModal({ open, onSuccess }: CheckoutAuthModalProps) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [loading, setLoading] = useState(false);
   const { toast } = useToast();
 
@@ -30,10 +31,21 @@ export function CheckoutAuthModal({ open, onSuccess }: CheckoutAuthModalProps) {
     setLoading(true);
 
     try {
+      // Validate password confirmation for registration
+      if (!isLogin && password !== passwordConfirm) {
+        toast({
+          title: "خطأ",
+          description: "كلمات المرور غير متطابقة",
+          variant: "destructive",
+        });
+        setLoading(false);
+        return;
+      }
+
       const endpoint = isLogin ? "/api/customers/login" : "/api/customers/register";
       const payload = isLogin
         ? { email, password }
-        : { name, email, password };
+        : { name, email, password, passwordConfirm };
 
       const response = await fetch(endpoint, {
         method: "POST",
@@ -132,6 +144,26 @@ export function CheckoutAuthModal({ open, onSuccess }: CheckoutAuthModalProps) {
               data-testid="input-password"
             />
           </div>
+
+          {!isLogin && (
+            <div className="space-y-2">
+              <Label htmlFor="passwordConfirm" className="flex items-center gap-2">
+                <Lock className="h-4 w-4" />
+                تأكيد كلمة المرور
+              </Label>
+              <Input
+                id="passwordConfirm"
+                type="password"
+                placeholder="••••••••"
+                value={passwordConfirm}
+                onChange={(e) => setPasswordConfirm(e.target.value)}
+                required={!isLogin}
+                minLength={6}
+                dir="ltr"
+                data-testid="input-password-confirm"
+              />
+            </div>
+          )}
 
           <Button
             type="submit"
