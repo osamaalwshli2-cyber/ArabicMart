@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
+import { CheckoutAuthModal } from "@/components/storefront/CheckoutAuthModal";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
@@ -146,6 +147,24 @@ export default function Checkout() {
     }
   };
 
+  const handleAuthSuccess = (customerId: number | null, customerName: string, customerEmail: string) => {
+    setIsLoggedInCustomer(true);
+    setShowAuthModal(false);
+    setForm((prev) => ({
+      ...prev,
+      customerId: customerId || undefined,
+      name: customerName,
+      email: customerEmail,
+    }));
+    localStorage.setItem("customerEmail", customerEmail);
+    localStorage.setItem("customerId", customerId?.toString() || "");
+    localStorage.setItem("customerName", customerName);
+  };
+
+  const handleGuestCheckout = () => {
+    setShowAuthModal(false);
+  };
+
   const handleSubmit = () => {
     createOrderMutation.mutate();
   };
@@ -159,6 +178,13 @@ export default function Checkout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+      {!isLoggedInCustomer && showAuthModal && (
+        <CheckoutAuthModal
+          open={true}
+          onSuccess={handleAuthSuccess}
+          onGuestCheckout={handleGuestCheckout}
+        />
+      )}
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
