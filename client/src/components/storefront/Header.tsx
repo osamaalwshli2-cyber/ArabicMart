@@ -78,9 +78,9 @@ export function Header() {
 
             <Link href="/" className="flex items-center gap-2" data-testid="link-logo">
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xl">م</span>
+                <span className="text-primary-foreground font-bold text-xl">D</span>
               </div>
-              <span className="font-bold text-xl hidden sm:inline">متجر العربي</span>
+              <span className="font-bold text-xl hidden sm:inline">Dhamar Mega Store</span>
             </Link>
           </div>
 

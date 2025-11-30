@@ -40,11 +40,11 @@ export function AdminSidebar() {
       <div className="p-6 border-b border-sidebar-border">
         <Link href="/admin" className="flex items-center gap-3">
           <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-xl">م</span>
+            <span className="text-primary-foreground font-bold text-xl">D</span>
           </div>
           <div>
             <span className="font-bold text-lg">لوحة التحكم</span>
-            <p className="text-xs text-muted-foreground">متجر العربي</p>
+            <p className="text-xs text-muted-foreground">Dhamar Mega Store</p>
           </div>
         </Link>
       </div>
