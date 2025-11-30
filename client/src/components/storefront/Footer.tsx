@@ -9,9 +9,9 @@ export function Footer() {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-bold text-xl">س</span>
+                <span className="text-primary-foreground font-bold text-xl">D</span>
               </div>
-              <span className="font-bold text-xl">سوق الخير</span>
+              <span className="font-bold text-xl">Dhamar Mega Store</span>
             </div>
             <p className="text-muted-foreground text-sm leading-relaxed">
               متجرك الإلكتروني المفضل للتسوق. نقدم لك أفضل المنتجات بأسعار مميزة وخدمة عملاء متميزة.
@@ -92,7 +92,7 @@ export function Footer() {
 
         <div className="border-t mt-8 pt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} سوق الخير. جميع الحقوق محفوظة.
+            © {new Date().getFullYear()} Dhamar Mega Store. جميع الحقوق محفوظة.
           </p>
         </div>
       </div>
