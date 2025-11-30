@@ -14,10 +14,11 @@ import { Mail, Lock, User } from "lucide-react";
 
 interface CheckoutAuthModalProps {
   open: boolean;
-  onSuccess: (customerId: number, customerName: string, customerEmail: string) => void;
+  onSuccess: (customerId: number | null, customerName: string, customerEmail: string) => void;
+  onGuestCheckout?: () => void;
 }
 
-export function CheckoutAuthModal({ open, onSuccess }: CheckoutAuthModalProps) {
+export function CheckoutAuthModal({ open, onSuccess, onGuestCheckout }: CheckoutAuthModalProps) {
   const [isLogin, setIsLogin] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -176,21 +177,44 @@ export function CheckoutAuthModal({ open, onSuccess }: CheckoutAuthModalProps) {
             {loading ? "جاري التحميل..." : isLogin ? "تسجيل الدخول" : "إنشاء حساب"}
           </Button>
 
-          <div className="text-center">
+          <div className="text-center space-y-3">
             <button
               type="button"
               onClick={() => {
                 setIsLogin(!isLogin);
                 setName("");
                 setPassword("");
+                setPasswordConfirm("");
               }}
-              className="text-sm text-primary hover:underline"
+              className="text-sm text-primary hover:underline block w-full"
               data-testid="button-toggle-auth"
             >
               {isLogin
                 ? "ليس لديك حساب؟ إنشاء حساب"
                 : "هل لديك حساب؟ تسجيل دخول"}
             </button>
+
+            {onGuestCheckout && (
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-muted-foreground">أو</span>
+                </div>
+              </div>
+            )}
+
+            {onGuestCheckout && (
+              <button
+                type="button"
+                onClick={onGuestCheckout}
+                className="w-full text-sm text-muted-foreground hover:text-foreground py-2"
+                data-testid="button-guest-checkout"
+              >
+                المتابعة كزائر
+              </button>
+            )}
           </div>
         </form>
       </DialogContent>

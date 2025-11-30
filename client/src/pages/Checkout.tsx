@@ -111,13 +111,17 @@ export default function Checkout() {
     createOrderMutation.mutate();
   };
 
-  const handleAuthSuccess = (customerId: number, customerName: string, customerEmail: string) => {
+  const handleAuthSuccess = (customerId: number | null, customerName: string, customerEmail: string) => {
     setForm((prev) => ({
       ...prev,
-      customerId,
+      customerId: customerId || undefined,
       name: customerName,
       email: customerEmail,
     }));
+    setShowAuthModal(false);
+  };
+
+  const handleGuestCheckout = () => {
     setShowAuthModal(false);
   };
 
@@ -129,7 +133,11 @@ export default function Checkout() {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <CheckoutAuthModal open={showAuthModal} onSuccess={handleAuthSuccess} />
+      <CheckoutAuthModal 
+        open={showAuthModal} 
+        onSuccess={handleAuthSuccess}
+        onGuestCheckout={handleGuestCheckout}
+      />
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
