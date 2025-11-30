@@ -61,6 +61,8 @@ export function CheckoutAuthModal({ open, onSuccess }: CheckoutAuthModalProps) {
       const data = await response.json();
       localStorage.setItem("customerToken", data.token);
       localStorage.setItem("customerId", data.customerId.toString());
+      localStorage.setItem("customerEmail", data.customerEmail);
+      localStorage.setItem("customerName", data.customerName);
 
       toast({
         title: isLogin ? "تم تسجيل الدخول بنجاح" : "تم إنشاء الحساب بنجاح",
