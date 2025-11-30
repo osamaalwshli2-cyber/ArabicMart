@@ -73,10 +73,10 @@ export function CheckoutAuthModal({ open, onSuccess }: CheckoutAuthModalProps) {
 
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-md" aria-describedby="auth-description">
+      <DialogContent className="sm:max-w-md" aria-describedby="checkout-auth-description">
         <DialogHeader>
           <DialogTitle data-testid="text-auth-title">{title}</DialogTitle>
-          <DialogDescription id="auth-description">{description}</DialogDescription>
+          <DialogDescription id="checkout-auth-description">{description}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">

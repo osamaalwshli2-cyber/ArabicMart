@@ -80,10 +80,10 @@ export function CustomerAuthModal({
 
   return (
     <Dialog open={open}>
-      <DialogContent className="sm:max-w-md" aria-describedby="order-auth-description">
+      <DialogContent className="sm:max-w-md" aria-describedby="customer-auth-description">
         <DialogHeader>
           <DialogTitle data-testid="text-auth-title">{title}</DialogTitle>
-          <DialogDescription id="order-auth-description">{description}</DialogDescription>
+          <DialogDescription id="customer-auth-description">{description}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
